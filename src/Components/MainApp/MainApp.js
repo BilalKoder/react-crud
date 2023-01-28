@@ -5,7 +5,7 @@ import EditPost from "../EditPost/EditPost";
 import Posts from "../Posts/Posts";
 
 function MainApp() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoader] = useState(false);
   const [posts, setPosts] = useState([]);
   const [editPostData, setEditPostData] = useState(null);
 
@@ -17,12 +17,12 @@ function MainApp() {
   }, []);
 
   const getPosts = useCallback(async () => {
-    setLoading(true);
+    setLoader(true);
     await fetch(`${baseUrl}/posts`)
       .then((response) => response.json())
       .then((data) => setPosts(data))
       .catch((error) => console.error(error));
-    setLoading(false);
+    setLoader(false);
   }, [posts]);
 
   const deletePost = async (event, postId) => {
@@ -37,7 +37,7 @@ function MainApp() {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         //React Code
-        setLoading(true);
+        setLoader(true);
         await fetch(`${baseUrl}/posts/${postId}`, {
           method: "DELETE",
         })
@@ -45,7 +45,7 @@ function MainApp() {
             await getPosts();
           })
           .catch((error) => console.error(error));
-        setLoading(false);
+        setLoader(false);
         //React Code
         Swal.fire("Post is deleted successfully!", "", "success");
       } else if (result.isDenied) {
@@ -57,7 +57,7 @@ function MainApp() {
   const editPost = useCallback(
     async (event, postId) => {
       event.preventDefault();
-      setLoading(true);
+      setLoader(true);
       //get post id data from database
       await fetch(`${baseUrl}/posts/${postId}`)
         .then((response) => response.json())
@@ -69,7 +69,7 @@ function MainApp() {
           $("#edit-post-modal").modal("show");
         })
         .catch((error) => console.error(error));
-      setLoading(false);
+      setLoader(false);
     },
     [editPostData]
   );
